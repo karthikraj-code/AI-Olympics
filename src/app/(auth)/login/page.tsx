@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Trophy } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
+import { getURL } from '@/utils/url'
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false)
@@ -17,7 +18,7 @@ export default function LoginPage() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback`,
+                    redirectTo: `${getURL()}auth/callback`,
                 },
             })
             if (error) throw error

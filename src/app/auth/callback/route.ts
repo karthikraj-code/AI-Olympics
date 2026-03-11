@@ -8,6 +8,11 @@ export async function GET(request: Request) {
     // if "next" is in param, use it as the redirect URL
     const next = searchParams.get('next') ?? '/'
 
+    // Handle Vercel deployment correctly using forwarded proxy headers
+    const forwardedProto = request.headers.get('x-forwarded-proto')
+    const forwardedHost = request.headers.get('x-forwarded-host')
+    const finalOrigin = (forwardedProto && forwardedHost) ? `${forwardedProto}://${forwardedHost}` : origin
+
     if (code) {
         const supabase = await createClient()
         const { error, data } = await supabase.auth.exchangeCodeForSession(code)
@@ -70,10 +75,10 @@ export async function GET(request: Request) {
             }
 
             // Redirect to correct dashboard based on role
-            return NextResponse.redirect(`${origin}/dashboard/${finalRole}`)
+            return NextResponse.redirect(`${finalOrigin}/dashboard/${finalRole}`)
         }
     }
 
     // return the user to an error page with instructions
-    return NextResponse.redirect(`${origin}/login?error=auth-failed`)
+    return NextResponse.redirect(`${finalOrigin}/login?error=auth-failed`)
 }
