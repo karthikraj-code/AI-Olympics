@@ -1,0 +1,4 @@
+src/app/dashboard/participant/rounds/page.tsx(25,9): error TS7034: Variable 'submissions' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/app/dashboard/participant/rounds/page.tsx(35,39): error TS7005: Variable 'submissions' implicitly has an 'any[]' type.
+src/app/dashboard/participant/team/page.tsx(110,31): error TS18048: 'team.team_members.length' is possibly 'undefined'.
+src/app/dashboard/participant/team/page.tsx(118,34): error TS18047: 'team' is possibly 'null'.
