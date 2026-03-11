@@ -9,7 +9,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-blue-600 mt-8">
             AI Olympics
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-black max-w-2xl mx-auto">
             A competitive arena for the brightest minds to tackle the ultimate AI challenges.
             Join a team, submit your solutions, and climb the leaderboard.
           </p>
