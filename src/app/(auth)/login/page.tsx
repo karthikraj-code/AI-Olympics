@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Trophy } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
-import { getURL } from '@/utils/url'
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false)
@@ -14,11 +13,15 @@ export default function LoginPage() {
     const handleGoogleLogin = async () => {
         setLoading(true)
         setError('')
+        
+        // Use a cleaner relative URL resolution that plays nicely with Vercel's Edge network
+        const origin = typeof window !== 'undefined' ? window.location.origin : ''
+        
         try {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${getURL()}auth/callback`,
+                    redirectTo: `${origin}/auth/callback`,
                 },
             })
             if (error) throw error

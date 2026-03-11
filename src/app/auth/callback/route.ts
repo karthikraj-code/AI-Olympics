@@ -3,15 +3,17 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url)
+    const { searchParams, origin, protocol, host } = new URL(request.url)
     const code = searchParams.get('code')
     // if "next" is in param, use it as the redirect URL
     const next = searchParams.get('next') ?? '/'
 
     // Handle Vercel deployment correctly using forwarded proxy headers
-    const forwardedProto = request.headers.get('x-forwarded-proto')
-    const forwardedHost = request.headers.get('x-forwarded-host')
-    const finalOrigin = (forwardedProto && forwardedHost) ? `${forwardedProto}://${forwardedHost}` : origin
+    const forwardedProto = request.headers.get('x-forwarded-proto') || protocol
+    const forwardedHost = request.headers.get('x-forwarded-host') || host
+    
+    // Construct the absolute base URL based on where the request actually arrived
+    const finalOrigin = `${forwardedProto}://${forwardedHost}`
 
     if (code) {
         const supabase = await createClient()
