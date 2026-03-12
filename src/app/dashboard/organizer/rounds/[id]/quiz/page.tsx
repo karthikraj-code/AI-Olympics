@@ -24,6 +24,7 @@ export default function ManageQuizPage() {
         option_c: '',
         option_d: '',
         correct_answer: 'option_a',
+        explanation: '',
         marks: 1
     })
 
@@ -37,10 +38,19 @@ export default function ManageQuizPage() {
                 .from('quiz_questions')
                 .select('*')
                 .eq('round_id', roundId)
-                .order('id', { ascending: true })
 
             if (error) throw error
-            setQuestions(data || [])
+
+            const sortedData = (data || []).sort((a, b) => {
+                const matchA = a.question.match(/^(\d+)\./);
+                const matchB = b.question.match(/^(\d+)\./);
+                const numA = matchA ? parseInt(matchA[1]) : 999999;
+                const numB = matchB ? parseInt(matchB[1]) : 999999;
+                if (numA !== numB) return numA - numB;
+                return a.question.localeCompare(b.question);
+            });
+
+            setQuestions(sortedData)
         } catch (err: any) {
             console.error(err)
         } finally {
@@ -75,6 +85,7 @@ export default function ManageQuizPage() {
                 option_c: '',
                 option_d: '',
                 correct_answer: 'option_a',
+                explanation: '',
                 marks: 1
             })
             fetchQuestions()
@@ -158,6 +169,17 @@ export default function ManageQuizPage() {
                             </div>
                         </div>
 
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Explanation (Optional)</label>
+                            <textarea
+                                value={formData.explanation}
+                                onChange={e => setFormData({ ...formData, explanation: e.target.value })}
+                                rows={2}
+                                placeholder="Explain why the answer is correct..."
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-slate-600 focus:border-transparent"
+                            />
+                        </div>
+
                         {error && <div className="p-3 bg-slate-50 text-slate-600 text-sm rounded">{error}</div>}
 
                         <button
@@ -175,7 +197,7 @@ export default function ManageQuizPage() {
                     {questions.map((q, idx) => (
                         <div key={q.id} className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm text-sm">
                             <div className="flex justify-between items-start mb-3">
-                                <p className="font-semibold text-gray-900"><span className="text-gray-500 mr-2">{idx + 1}.</span>{q.question}</p>
+                                <p className="font-semibold text-gray-900"><span className="text-gray-500 mr-2">{idx + 1}.</span>{q.question.replace(/^\d+\.\s*/, '')}</p>
                                 <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs shrink-0">{q.marks} pts</span>
                             </div>
                             <ul className="space-y-1 pl-6">
@@ -189,6 +211,12 @@ export default function ManageQuizPage() {
                                     )
                                 })}
                             </ul>
+                            {q.explanation && (
+                                <div className="mt-4 pt-3 border-t border-gray-100 text-gray-700 bg-gray-50 p-3 rounded-lg">
+                                    <span className="font-semibold text-gray-900 block mb-1">Explanation:</span>
+                                    {q.explanation}
+                                </div>
+                            )}
                         </div>
                     ))}
                     {questions.length === 0 && (

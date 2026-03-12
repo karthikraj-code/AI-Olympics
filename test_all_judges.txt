@@ -1,0 +1,21 @@
+--- USERS ---
+a567db22-d725-4fd8-a9c1-5f1b2f53b838 | organizer | Karthik Aradhula | aradhulakarthik@gmail.com
+f9830b01-2428-4ba2-aaaa-54d8f608cb8f | organizer | ARAJYULA KARTHIK RAJU 2023-CSE | 99230040479@klu.ac.in
+a93ae356-9632-45bb-acef-0b5c001fc1e6 | judge | Google Developer Students Club Student Chapter | gdsckare@klu.ac.in
+262aee13-3153-4ad3-9107-122839ca53d2 | participant | Karthik | ishowspeedbunty@gmail.com
+aec98181-f775-40a4-9c9d-18c95df2308f | participant | Bharath | bharathinukurthi1@gmail.com
+d449ed3a-b712-49bc-a919-471a978ea1d0 | participant | karthik raju | karthikgithub032@gmail.com
+a39cdd8e-05a1-4b96-95fc-46cfd7c2c392 | participant | Veeramaneeswarreddy Gadikota | veeramaneeswarreddygadikota@gmail.com
+747c4d79-64a7-4ef4-a01e-11389a1374fb | participant | Yamini Narasimharao | yamininarasimharao77@gmail.com
+c13fde6b-8de4-4f6a-977f-be93e25023be | participant | Karthik | karthikrajbunty@gmail.com
+789c71ce-ca9d-49bc-bf28-4bcbab81bf91 | participant | Kiran Gopi Chand Kurapati | gopichandkurapati5@gmail.com
+76b025f4-b1b8-40ec-b187-4034fb77a8df | participant | Atshaya | ravimabelrani@gmail.com
+74e78a11-a5b7-4d36-b037-3ec3159de8b0 | participant | Trinath Kumar 2023-CSE | 99230040688@klu.ac.in
+bec908ed-86f9-4e3b-bdff-f0f300ff2e86 | participant | Trinath Nallanukala | trinathnallanukala@gmail.com
+fc1f5cc8-4e09-487e-9a4c-bd75603e88e7 | participant | HANUMANAGUTTI VENKATA NIKHIL 2023-CSE | 99230040198@klu.ac.in
+1231282c-7ba3-4897-886e-d82f5d13454e | participant | Nikhio Nikhil | nikhionikhil@gmail.com
+7eac86fc-8f0c-424e-a604-39838c8d6bcb | participant | Nikhil | nikhilhanumanagutti@gmail.com
+
+--- JUDGE ASSIGNMENTS ---
+Team: 10ed4407-63b4-45a1-a419-efac1407714b assigned to Judge: a93ae356-9632-45bb-acef-0b5c001fc1e6
+Team: 619d1a96-1a69-48e5-aafd-81c577d5d89b assigned to Judge: a93ae356-9632-45bb-acef-0b5c001fc1e6

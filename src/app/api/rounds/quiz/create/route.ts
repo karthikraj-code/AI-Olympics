@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     try {
         const supabase = await createClient()
         const session = await getServerSession(authOptions);
-    const user = session?.user as any
+        const user = session?.user as any
 
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -29,6 +29,7 @@ export async function POST(request: Request) {
             option_c,
             option_d,
             correct_answer,
+            explanation,
             marks
         } = await request.json()
 
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
         const { data, error } = await supabase
             .from('quiz_questions')
             .insert([{
-                round_id, question, option_a, option_b, option_c, option_d, correct_answer, marks: marks || 1
+                round_id, question, option_a, option_b, option_c, option_d, correct_answer, explanation, marks: marks || 1
             }])
             .select()
             .single()

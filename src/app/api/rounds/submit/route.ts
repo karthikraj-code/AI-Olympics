@@ -16,6 +16,7 @@ export async function POST(request: Request) {
             text_response,
             file_url,
             link,
+            github_url,
             quiz_score // Used if it's a quiz auto-calculation from client
         } = await request.json()
 
@@ -75,6 +76,7 @@ export async function POST(request: Request) {
                     text_response,
                     file_url,
                     link,
+                    github_url,
                     submitted_at: new Date().toISOString()
                 })
                 .eq('id', existingSub.id)
@@ -90,7 +92,8 @@ export async function POST(request: Request) {
                     round_id,
                     text_response,
                     file_url,
-                    link
+                    link,
+                    github_url
                 }])
                 .select()
 

@@ -6,19 +6,19 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
     try {
         const supabase = await createClient()
-        const session = await getServerSession(authOptions);
-    const user = session?.user as any
+        const session = await getServerSession(authOptions)
+        const user = session?.user as any
 
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-        const { data: userData } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', user.id)
-            .single()
+        // Trust the role from the NextAuth session token (set during sign-in in auth.ts).
+        // This avoids a redundant DB lookup that can silently return null when RLS or
+        // network issues arise, incorrectly triggering the 403.
+        const userRole = user.role
+        console.log('[assign-judge] user.id:', user.id, 'role from session:', userRole)
 
-        if (userData?.role !== 'organizer') {
-            return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        if (userRole !== 'organizer') {
+            return NextResponse.json({ error: 'Forbidden', debug: { userId: user.id, role: userRole } }, { status: 403 })
         }
 
         const { team_id, judge_id, action } = await request.json()

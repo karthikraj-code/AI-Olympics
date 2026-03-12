@@ -18,11 +18,11 @@ export default async function ParticipantRoundsPage() {
 
     const teamId = membership?.team_id
 
-    // 2. Fetch all rounds
+    // 2. Fetch all rounds sorted by round_number
     const { data: rounds } = await supabase
         .from('rounds')
         .select('*')
-        .order('start_time', { ascending: true })
+        .order('round_number', { ascending: true })
 
     // 3. Fetch team submissions if part of a team
     let submissions: any[] = []
@@ -76,7 +76,10 @@ export default async function ParticipantRoundsPage() {
                         <div key={round.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col md:flex-row">
                             <div className="p-6 flex-1">
                                 <div className="flex justify-between items-start mb-2">
-                                    <h3 className="font-bold text-gray-900 text-lg leading-tight">{round.name}</h3>
+                                    <h3 className="font-bold text-gray-900 text-lg leading-tight">
+                                        {round.round_number && <span className="text-blue-600 mr-2">Round {round.round_number}:</span>}
+                                        {round.name}
+                                    </h3>
                                     <span className={`text-xs font-bold px-2 py-1 rounded-full border ${statusColor}`}>
                                         {statusText}
                                     </span>

@@ -1,0 +1,12 @@
+Anon assignments fetch error: null
+Anon assignments count: 2
+Assignments: [
+  {
+    team_id: '10ed4407-63b4-45a1-a419-efac1407714b',
+    judge_id: 'a93ae356-9632-45bb-acef-0b5c001fc1e6'
+  },
+  {
+    team_id: '619d1a96-1a69-48e5-aafd-81c577d5d89b',
+    judge_id: 'a93ae356-9632-45bb-acef-0b5c001fc1e6'
+  }
+]

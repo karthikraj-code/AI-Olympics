@@ -56,7 +56,7 @@ export default async function JudgeSubmissionsPage() {
     })
 
     submissions?.forEach(sub => {
-        if (matrix[sub.team_id]) {
+        if (matrix[sub.team_id] && matrix[sub.team_id][sub.round_id]) {
             matrix[sub.team_id][sub.round_id].submission = sub
         }
     })

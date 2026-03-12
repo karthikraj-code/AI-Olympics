@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react"
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, FileText, Link as LinkIcon, Download, AlertCircle, Save } from 'lucide-react'
+import { ArrowLeft, FileText, Link as LinkIcon, Download, AlertCircle, Save, CheckCircle2 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 
 export default function GradeSubmissionPage() {
@@ -23,6 +23,7 @@ export default function GradeSubmissionPage() {
     const [round, setRound] = useState<any>(null)
     const [submission, setSubmission] = useState<any>(null)
     const [existingScore, setExistingScore] = useState<any>(null)
+    const [teamTopics, setTeamTopics] = useState<any[]>([])
 
     const [score, setScore] = useState<number | ''>('')
     const [feedback, setFeedback] = useState('')
@@ -57,6 +58,16 @@ export default function GradeSubmissionPage() {
                 setExistingScore(sc)
                 setScore(sc.score)
                 setFeedback(sc.feedback || '')
+            }
+
+            // Fetch T-Learn Topics if applicable
+            if (r?.submission_type?.includes('tlearn_topics')) {
+                const { data: topicsData } = await supabase
+                    .from('topic_selections')
+                    .select('topic_id, topics(name, category)')
+                    .eq('round_id', roundId)
+                    .eq('team_id', teamId)
+                if (topicsData) setTeamTopics(topicsData)
             }
         } catch (err: any) {
             console.error(err)
@@ -123,7 +134,10 @@ export default function GradeSubmissionPage() {
                         <p className="text-blue-600 font-medium mb-6">Round: {round.name}</p>
 
                         <div className="space-y-6">
-                            {submission.text_response && !isQuiz && (
+                            {submission.text_response && !isQuiz && 
+                                !round.submission_type?.includes('tlearn_topics') && 
+                                !round.submission_type?.includes('bias_investigation') && 
+                                !round.submission_type?.includes('worst_ui') && (
                                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                                     <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center gap-2 font-medium text-gray-700">
                                         <FileText size={18} /> Text Response
@@ -148,11 +162,35 @@ export default function GradeSubmissionPage() {
                                 </div>
                             )}
 
+                            {teamTopics.length > 0 && (
+                                <div className="border border-emerald-200 rounded-lg overflow-hidden">
+                                    <div className="bg-emerald-50 px-4 py-2 border-b border-emerald-200 flex items-center gap-2 font-medium text-emerald-800">
+                                        <CheckCircle2 size={18} /> Selected T-Learn Topics
+                                    </div>
+                                    <div className="p-4 bg-white text-gray-800">
+                                        <ul className="space-y-3">
+                                            {teamTopics.map((ts, idx) => (
+                                                <li key={idx} className="flex flex-col">
+                                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{ts.topics?.category === 'cse' ? 'CSE Domain' : 'Other Domain'}</span>
+                                                    <span className="font-medium">{ts.topics?.name}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+
                             {submission.link && (
                                 <div className="border border-gray-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white">
                                     <div className="flex items-center gap-3 font-medium text-gray-700">
                                         <LinkIcon size={20} className="text-blue-600" />
-                                        External Link Submitted
+                                        {round.submission_type?.includes('tlearn_topics')
+                                            ? 'Google Slides PPT'
+                                            : round.submission_type?.includes('debate_topics')
+                                                ? 'ChatGPT Chat Link'
+                                                : round.submission_type?.includes('worst_ui')
+                                                    ? 'Application Live Link'
+                                                    : 'External Link Submitted'}
                                     </div>
                                     <a href={submission.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline whitespace-nowrap">
                                         Open Link &rarr;
@@ -160,15 +198,80 @@ export default function GradeSubmissionPage() {
                                 </div>
                             )}
 
-                            {submission.file_url && (
-                                <div className="border border-gray-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white">
+                            {submission.text_response && round.submission_type?.includes('tlearn_topics') && (
+                                <div className="border border-purple-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white">
                                     <div className="flex items-center gap-3 font-medium text-gray-700">
-                                        <Download size={20} className="text-blue-600" />
-                                        File Uploaded
+                                        <LinkIcon size={20} className="text-purple-600" />
+                                        ChatGPT Chat Link
                                     </div>
-                                    <a href={submission.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline whitespace-nowrap">
-                                        View File &rarr;
+                                    <a href={submission.text_response} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline whitespace-nowrap">
+                                        Open Chat &rarr;
                                     </a>
+                                </div>
+                            )}
+
+                            {submission.file_url && (
+                                <div className="border border-gray-200 rounded-lg overflow-hidden flex flex-col p-4 bg-white gap-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3 font-medium text-gray-700">
+                                            {round.submission_type?.includes('bias_investigation') || round.submission_type?.includes('worst_ui')
+                                                ? <LinkIcon size={20} className="text-blue-600" /> 
+                                                : <Download size={20} className="text-blue-600" />
+                                            }
+                                            {round.submission_type?.includes('bias_investigation') 
+                                                ? 'AI Generated Image' 
+                                                : round.submission_type?.includes('worst_ui')
+                                                    ? 'Demo Link (Video/Drive)'
+                                                    : 'File Uploaded'}
+                                        </div>
+                                        <a href={submission.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline whitespace-nowrap text-sm">
+                                            {round.submission_type?.includes('worst_ui') ? 'Open Demo →' : 'View Full Size →'}
+                                        </a>
+                                    </div>
+                                    {round.submission_type?.includes('bias_investigation') && (
+                                        <div className="mt-2 border rounded p-1 bg-gray-50">
+                                            <img 
+                                                src={submission.file_url} 
+                                                alt="AI Generated" 
+                                                className="max-w-full h-auto rounded max-h-[400px] object-contain mx-auto"
+                                                onError={(e) => { (e.target as any).src = 'https://placehold.co/400x300?text=Invalid+Image+URL' }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {(submission as any).github_url && (
+                                <div className="border border-gray-900 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white shadow-sm">
+                                    <div className="flex items-center gap-3 font-medium text-gray-900">
+                                        <LinkIcon size={20} className="text-gray-900" />
+                                        GitHub Repository
+                                    </div>
+                                    <a href={(submission as any).github_url} target="_blank" rel="noopener noreferrer" className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+                                        View Code &rarr;
+                                    </a>
+                                </div>
+                            )}
+
+                            {submission.text_response && round.submission_type?.includes('worst_ui') && (
+                                <div className="border border-red-200 rounded-lg overflow-hidden bg-white">
+                                    <div className="bg-red-50 px-4 py-2 border-b border-red-100 font-bold text-red-800 text-sm italic">
+                                        PROJECT THEME
+                                    </div>
+                                    <div className="p-4 text-gray-800 font-medium">
+                                        {submission.text_response}
+                                    </div>
+                                </div>
+                            )}
+
+                            {submission.text_response && round.submission_type?.includes('bias_investigation') && (
+                                <div className="border border-blue-200 rounded-lg overflow-hidden bg-white">
+                                    <div className="bg-blue-50 px-4 py-2 border-b border-blue-100 font-bold text-blue-800 text-sm">
+                                        BIAS ANALYSIS POINTS
+                                    </div>
+                                    <div className="p-4 text-gray-800 whitespace-pre-wrap leading-relaxed">
+                                        {submission.text_response}
+                                    </div>
                                 </div>
                             )}
                         </div>
