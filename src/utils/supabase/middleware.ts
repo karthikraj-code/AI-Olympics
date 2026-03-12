@@ -38,7 +38,11 @@ export async function updateSession(request: NextRequest) {
     if (!user && isDashboardRoute) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
-        return NextResponse.redirect(url)
+        const redirectResponse = NextResponse.redirect(url)
+        supabaseResponse.cookies.getAll().forEach(cookie => {
+            redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+        })
+        return redirectResponse
     }
 
     // If user is logged in, let's check their role to route them properly
@@ -56,7 +60,11 @@ export async function updateSession(request: NextRequest) {
         if (isAuthRoute || request.nextUrl.pathname === '/dashboard') {
             const url = request.nextUrl.clone()
             url.pathname = `/dashboard/${role}`
-            return NextResponse.redirect(url)
+            const redirectResponse = NextResponse.redirect(url)
+            supabaseResponse.cookies.getAll().forEach(cookie => {
+                redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+            })
+            return redirectResponse
         }
     }
 
