@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { LogOut, LayoutDashboard, Users, UserCircle, Target } from 'lucide-react'
+import SignOutButton from '@/components/SignOutButton'
 
 export default async function ParticipantLayout({
     children,
@@ -58,12 +59,7 @@ export default async function ParticipantLayout({
                 </nav>
 
                 <div className="absolute bottom-0 w-full md:w-64 p-4 border-t border-gray-200">
-                    <form action="/auth/signout" method="post">
-                        <button type="submit" className="flex w-full items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors text-sm font-medium">
-                            <LogOut size={18} />
-                            Sign Out
-                        </button>
-                    </form>
+                    <SignOutButton />
                 </div>
             </aside>
 
