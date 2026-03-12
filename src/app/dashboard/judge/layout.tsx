@@ -60,7 +60,7 @@ export default async function JudgeLayout({
                     <h1 className="text-xl font-semibold text-gray-800">Judge Panel</h1>
                     <div className="flex items-center gap-4">
                         <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                            {userData?.name?.charAt(0).toUpperCase() || 'J'}
+                            {user?.name?.charAt(0).toUpperCase() || 'J'}
                         </div>
                     </div>
                 </header>

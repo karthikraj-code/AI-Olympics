@@ -72,7 +72,7 @@ export default async function OrganizerLayout({
                     <h1 className="text-xl font-semibold text-gray-800">Organizer Panel</h1>
                     <div className="flex items-center gap-4">
                         <div className="w-8 h-8 bg-slate-600 text-white rounded-full flex items-center justify-center font-bold">
-                            {userData?.name?.charAt(0).toUpperCase() || 'O'}
+                            {user?.name?.charAt(0).toUpperCase() || 'O'}
                         </div>
                     </div>
                 </header>

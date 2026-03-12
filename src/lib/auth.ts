@@ -23,34 +23,22 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === "google" && user.email) {
                 const emailLower = user.email.toLowerCase()
 
-                // Check if user exists in public.users table
-                const { data: userData } = await supabase
-                    .from('users')
-                    .select('id, role')
-                    .eq('email', emailLower)
-                    .maybeSingle()
+                // Concurrently fetch existing user data and whitelist status to eliminate DB cascading delays
+                const [
+                    { data: userData },
+                    { data: orgData },
+                    { data: judgeData }
+                ] = await Promise.all([
+                    supabase.from('users').select('id, role').eq('email', emailLower).maybeSingle(),
+                    supabase.from('organizer_emails').select('email').eq('email', emailLower).maybeSingle(),
+                    supabase.from('judge_emails').select('email').eq('email', emailLower).maybeSingle()
+                ])
 
-                // Determine intended role based on whitelists
                 let intendedRole = 'participant'
-
-                const { data: orgData } = await supabase
-                    .from('organizer_emails')
-                    .select('email')
-                    .eq('email', emailLower)
-                    .single()
-
                 if (orgData) {
                     intendedRole = 'organizer'
-                } else {
-                    const { data: judgeData } = await supabase
-                        .from('judge_emails')
-                        .select('email')
-                        .eq('email', emailLower)
-                        .single()
-
-                    if (judgeData) {
-                        intendedRole = 'judge'
-                    }
+                } else if (judgeData) {
+                    intendedRole = 'judge'
                 }
 
                 if (!userData) {

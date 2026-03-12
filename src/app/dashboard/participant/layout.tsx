@@ -66,10 +66,10 @@ export default async function ParticipantLayout({
             {/* Main Content Area */}
             <main className="flex-1 overflow-auto">
                 <header className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between shadow-sm">
-                    <h1 className="text-xl font-semibold text-gray-800">Welcome, {userData?.name || 'Participant'}</h1>
+                    <h1 className="text-xl font-semibold text-gray-800">Welcome, {user?.name || 'Participant'}</h1>
                     <div className="flex items-center gap-4">
                         <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                            {userData?.name?.charAt(0).toUpperCase() || 'P'}
+                            {user?.name?.charAt(0).toUpperCase() || 'P'}
                         </div>
                     </div>
                 </header>
