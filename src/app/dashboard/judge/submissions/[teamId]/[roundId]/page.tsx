@@ -1,4 +1,5 @@
 'use client'
+import { getSession } from "next-auth/react"
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -32,7 +33,8 @@ export default function GradeSubmissionPage() {
 
     const fetchData = async () => {
         try {
-            const { data: { user } } = await supabase.auth.getUser()
+            const session = await getSession();
+    const user = session?.user as any
             if (!user) return
 
             // Fetch Team, Round, Submission, and existing Score concurrently

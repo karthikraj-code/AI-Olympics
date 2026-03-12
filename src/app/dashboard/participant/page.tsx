@@ -1,8 +1,11 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 
 export default async function ParticipantDashboard() {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const session = await getServerSession(authOptions);
+    const user = session?.user as any
 
     const { data: userData } = await supabase
         .from('users')

@@ -1,10 +1,13 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
     try {
         const supabase = await createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const session = await getServerSession(authOptions);
+    const user = session?.user as any
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
         const { data: userData } = await supabase.from('users').select('role').eq('id', user.id).single()
@@ -25,7 +28,8 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const supabase = await createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const session = await getServerSession(authOptions);
+    const user = session?.user as any
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
         const { data: userData } = await supabase.from('users').select('role').eq('id', user.id).single()
@@ -68,7 +72,8 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
     try {
         const supabase = await createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const session = await getServerSession(authOptions);
+    const user = session?.user as any
         if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
         const { data: userData } = await supabase.from('users').select('role').eq('id', user.id).single()

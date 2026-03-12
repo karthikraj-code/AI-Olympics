@@ -1,10 +1,13 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { Calendar, Clock, FileText, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react'
 
 export default async function ParticipantRoundsPage() {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const session = await getServerSession(authOptions);
+    const user = session?.user as any
 
     // 1. Get user's team
     const { data: membership } = await supabase

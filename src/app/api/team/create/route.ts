@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
@@ -5,7 +7,8 @@ import crypto from 'crypto'
 export async function POST(request: Request) {
     try {
         const supabase = await createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const session = await getServerSession(authOptions);
+    const user = session?.user as any
 
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

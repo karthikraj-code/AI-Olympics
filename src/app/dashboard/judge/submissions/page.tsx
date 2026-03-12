@@ -1,10 +1,13 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, Clock } from 'lucide-react'
 
 export default async function JudgeSubmissionsPage() {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const session = await getServerSession(authOptions);
+    const user = session?.user as any
 
     // 1. Get teams assigned to this judge
     const { data: assignments } = await supabase

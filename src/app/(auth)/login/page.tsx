@@ -3,12 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Trophy } from 'lucide-react'
-import { createClient } from '@/utils/supabase/client'
+import { signIn } from 'next-auth/react'
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const supabase = createClient()
 
     const handleGoogleLogin = async () => {
         setLoading(true)
@@ -18,13 +17,7 @@ export default function LoginPage() {
         const origin = typeof window !== 'undefined' ? window.location.origin : ''
         
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: `${origin}/auth/callback`,
-                },
-            })
-            if (error) throw error
+            await signIn('google', { callbackUrl: '/dashboard' })
         } catch (err: any) {
             setError(err.message)
             setLoading(false)

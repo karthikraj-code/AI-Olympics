@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 // Add link to Rounds in participant layout sidebar
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
@@ -10,7 +12,8 @@ export default async function ParticipantLayout({
     children: React.ReactNode
 }) {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const session = await getServerSession(authOptions);
+    const user = session?.user as any
 
     if (!user) {
         redirect('/login')

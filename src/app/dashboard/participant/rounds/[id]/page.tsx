@@ -1,4 +1,5 @@
 'use client'
+import { getSession } from "next-auth/react"
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -38,7 +39,8 @@ export default function RoundSubmissionPage() {
 
     const fetchRoundData = async () => {
         try {
-            const { data: { user } } = await supabase.auth.getUser()
+            const session = await getSession();
+    const user = session?.user as any
             if (!user) return
 
             // 1. Get Round Details
