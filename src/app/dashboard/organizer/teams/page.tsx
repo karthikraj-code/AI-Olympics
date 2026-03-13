@@ -75,6 +75,26 @@ export default function ManageTeamsPage() {
         return assignments.some(a => a.team_id === teamId && a.judge_id === judgeId)
     }
 
+    const handleBulkAssignment = async (judge_id: string) => {
+        if (!confirm('Are you sure you want to assign ALL teams to this judge?')) return
+        setProcessing(`bulk-${judge_id}`)
+        try {
+            const res = await fetch('/api/organizer/assign-judge', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ judge_id, action: 'bulk_assign' })
+            })
+            if (!res.ok) throw new Error('Failed to bulk assign')
+            await fetchData()
+            alert('All teams assigned successfully!')
+        } catch (err) {
+            console.error(err)
+            alert('Failed to bulk assign')
+        } finally {
+            setProcessing(null)
+        }
+    }
+
     if (loading) return <div className="p-8 text-center text-gray-500">Loading teams and judges...</div>
 
     return (
@@ -83,6 +103,43 @@ export default function ManageTeamsPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Manage Teams & Judges</h2>
                 <p className="text-gray-600">Assign specific teams to judges for review. <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Note: Judges only evaluate manual submission rounds. Quiz rounds are auto-graded and hidden from judges.</span></p>
             </div>
+
+            {/* Bulk Assignment Panel */}
+            {judges.length > 0 && (
+                <div className="bg-white p-6 rounded-xl border border-blue-200 shadow-sm bg-gradient-to-r from-blue-50 to-white">
+                    <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                        <UserPlus size={20} />
+                        Bulk Assignment
+                    </h3>
+                    <div className="flex flex-wrap items-end gap-4">
+                        <div className="flex-1 min-w-[240px]">
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Select Judge for Bulk Assignment</label>
+                            <select 
+                                id="bulk-judge-select"
+                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                                defaultValue=""
+                            >
+                                <option value="" disabled>-- Choose a judge --</option>
+                                {judges.map(j => (
+                                    <option key={j.id} value={j.id}>{j.name} ({j.email})</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button
+                            onClick={() => {
+                                const select = document.getElementById('bulk-judge-select') as HTMLSelectElement
+                                if (select.value) handleBulkAssignment(select.value)
+                                else alert('Please select a judge first')
+                            }}
+                            disabled={!!processing}
+                            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md disabled:bg-gray-400 flex items-center gap-2"
+                        >
+                            {processing?.startsWith('bulk') ? 'Processing...' : <><UserPlus size={18} /> Assign All Teams</>}
+                        </button>
+                    </div>
+                    <p className="mt-3 text-xs text-blue-600 font-medium">* This will assign every registered team to the selected judge at once.</p>
+                </div>
+            )}
 
             {judges.length === 0 && (
                 <div className="bg-sky-50 text-sky-800 p-4 rounded-lg flex items-start gap-3 border border-sky-200">

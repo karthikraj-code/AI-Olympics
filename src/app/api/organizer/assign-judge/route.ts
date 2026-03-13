@@ -22,23 +22,39 @@ export async function POST(request: Request) {
         }
 
         const { team_id, judge_id, action } = await request.json()
+        console.log('[assign-judge] incoming request:', { team_id, judge_id, action })
 
-        if (!team_id || !judge_id || !action) {
+        if (!judge_id || !action) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
         }
 
         if (action === 'assign') {
+            if (!team_id) return NextResponse.json({ error: 'Team ID required for assign' }, { status: 400 })
             const { error } = await supabase
                 .from('judge_assignments')
                 .insert([{ team_id, judge_id }])
             if (error) throw error
         } else if (action === 'remove') {
+            if (!team_id) return NextResponse.json({ error: 'Team ID required for remove' }, { status: 400 })
             const { error } = await supabase
                 .from('judge_assignments')
                 .delete()
                 .eq('team_id', team_id)
                 .eq('judge_id', judge_id)
             if (error) throw error
+        } else if (action === 'bulk_assign') {
+            // Fetch all team IDs
+            const { data: teams, error: teamsErr } = await supabase.from('teams').select('id')
+            if (teamsErr) throw teamsErr
+            
+            if (teams && teams.length > 0) {
+                // Prepare upsert to avoid duplicates if some are already assigned
+                const assignments = teams.map(t => ({ team_id: t.id, judge_id }))
+                const { error: bulkErr } = await supabase
+                    .from('judge_assignments')
+                    .upsert(assignments, { onConflict: 'team_id,judge_id' })
+                if (bulkErr) throw bulkErr
+            }
         } else {
             return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
         }
