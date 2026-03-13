@@ -897,8 +897,124 @@ export default function RoundSubmissionPage() {
                                 </div>
                             )}
 
+                            {/* DATA PREPROCESSING */}
+                            {types.includes('data_preprocessing') && (
+                                <div className="space-y-6">
+                                    <div className="bg-indigo-50 text-indigo-800 p-4 rounded-lg text-sm border border-indigo-100">
+                                        <p className="font-semibold mb-1">Data Preprocessing Guidelines:</p>
+                                        <ul className="list-disc pl-5 space-y-1">
+                                            <li>Download the noisy CSV file from the link below.</li>
+                                            <li>Use AI and write code to clean the data.</li>
+                                            <li>Submit your Google Colab link and the ChatGPT shared chat link used for the process.</li>
+                                            <li>Only the Team Leader can submit the final links.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="bg-white border-2 border-dashed border-indigo-200 p-6 rounded-xl text-center">
+                                        <h4 className="font-bold text-indigo-900 mb-2">Noisy CSV Data Source</h4>
+                                        <p className="text-sm text-gray-600 mb-4">Download the dataset to start your preprocessing task.</p>
+                                        <a 
+                                            href="https://drive.google.com/drive/folders/1UbVdCmQwBk68oTn4qvkVB22P0KlHlPFP?usp=sharing" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition-all shadow-md group"
+                                        >
+                                            <Upload size={18} className="rotate-180 group-hover:-translate-y-0.5 transition-transform" />
+                                            Download Noisy CSV
+                                        </a>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <h4 className="font-bold text-gray-900">Final Submission</h4>
+                                        
+                                        <div>
+                                            <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+                                                <LinkIcon size={18} className="text-gray-500" />
+                                                Google Colab Code Link
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.link || ''}
+                                                required
+                                                onChange={e => setFormData({ ...formData, link: e.target.value })}
+                                                disabled={isClosed}
+                                                placeholder="https://colab.research.google.com/drive/..."
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all disabled:bg-gray-50"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+                                                <LinkIcon size={18} className="text-gray-500" />
+                                                ChatGPT Shared Chat Link
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.chatgpt_link_2 || ''}
+                                                required
+                                                onChange={e => setFormData({ ...formData, chatgpt_link_2: e.target.value })}
+                                                disabled={isClosed}
+                                                placeholder="https://chatgpt.com/share/..."
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all disabled:bg-gray-50"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+                                                <FileText size={18} className="text-gray-500" />
+                                                Brief Description/Explanation
+                                            </label>
+                                            <textarea
+                                                value={formData.text_response || ''}
+                                                required
+                                                onChange={e => setFormData({ ...formData, text_response: e.target.value })}
+                                                rows={4}
+                                                disabled={isClosed}
+                                                placeholder="Briefly explain your cleaning approach and logic..."
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all disabled:bg-gray-50"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* SHARK TANK PITCH */}
+                            {types.includes('shark_tank') && (
+                                <div className="space-y-6">
+                                    <div className="bg-emerald-50 text-emerald-800 p-4 rounded-lg text-sm border border-emerald-100">
+                                        <p className="font-semibold mb-1">Shark Tank Pitch Guidelines:</p>
+                                        <ul className="list-disc pl-5 space-y-1">
+                                            <li>This is an open innovation round.</li>
+                                            <li>Prepare a Google Slides presentation detailing your problem statement, AI solution, and execution plan.</li>
+                                            <li>Ensure your Google Slides link is set to "Anyone with the link can view".</li>
+                                            <li>Only the Team Leader can submit the final pitch.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="space-y-4 pt-4 border-t border-gray-100">
+                                        <h4 className="font-bold text-gray-900">Pitch Submission</h4>
+                                        
+                                        <div>
+                                            <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+                                                <LinkIcon size={18} className="text-gray-500" />
+                                                Google Slides Presentation Link
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={formData.link || ''}
+                                                required
+                                                onChange={e => setFormData({ ...formData, link: e.target.value })}
+                                                disabled={isClosed}
+                                                placeholder="https://docs.google.com/presentation/d/..."
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all disabled:bg-gray-50"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* TEXT TYPE */}
-                            {types.includes('text') && !types.includes('quiz') && !types.includes('tlearn_topics') && !types.includes('debate_topics') && !types.includes('bias_investigation') && !types.includes('worst_ui') && (
+                            {types.includes('text') && !types.includes('quiz') && !types.includes('tlearn_topics') && !types.includes('debate_topics') && !types.includes('bias_investigation') && !types.includes('worst_ui') && !types.includes('data_preprocessing') && !types.includes('shark_tank') && (
                                 <div>
                                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
                                         <FileText size={18} className="text-gray-500" />
