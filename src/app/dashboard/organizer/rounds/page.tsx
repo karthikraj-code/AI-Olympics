@@ -88,6 +88,9 @@ export default async function OrganizerRoundsPage() {
                                     <span className="text-gray-400 cursor-not-allowed">Standard Round</span>
                                 )}
                                 <div className="flex items-center gap-4">
+                                    <Link href="/dashboard/organizer/submissions" className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                                        Submissions
+                                    </Link>
                                     <Link href={`/dashboard/organizer/rounds/${round.id}/edit`} className="text-gray-600 hover:text-gray-900">
                                         Edit
                                     </Link>

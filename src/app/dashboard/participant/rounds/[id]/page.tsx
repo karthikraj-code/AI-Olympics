@@ -73,6 +73,7 @@ export default function RoundSubmissionPage() {
                 .eq('user_id', user.id)
                 .single()
 
+            let currentTeam = null
             if (membership) {
                 const { data: teamData } = await supabase
                     .from('teams')
@@ -81,6 +82,7 @@ export default function RoundSubmissionPage() {
                     .single()
 
                 setTeam(teamData)
+                currentTeam = teamData
                 setIsLeader(teamData?.leader_id === user.id)
 
                 // 3. Get Existing Submission
@@ -151,12 +153,12 @@ export default function RoundSubmissionPage() {
                 }
 
                 // If user is in a team, fetch the team's selected topics
-                if (team) {
+                if (currentTeam) {
                     const { data: teamSelectionData } = await supabase
                         .from('topic_selections')
                         .select('topic_id, topics(name, category)')
                         .eq('round_id', roundId)
-                        .eq('team_id', team.id)
+                        .eq('team_id', currentTeam.id)
 
                     if (teamSelectionData && teamSelectionData.length > 0) {
                         setTeamTopics(teamSelectionData)
@@ -191,12 +193,12 @@ export default function RoundSubmissionPage() {
                     setDebateTopics(enrichedTopics)
                 }
 
-                if (team) {
+                if (currentTeam) {
                     const { data: debateSelection } = await supabase
                         .from('topic_selections')
                         .select('topic_id, topics(name)')
                         .eq('round_id', roundId)
-                        .eq('team_id', team.id)
+                        .eq('team_id', currentTeam.id)
                         .single()
 
                     if (debateSelection) {
@@ -232,12 +234,12 @@ export default function RoundSubmissionPage() {
                     setBiasTopics(enrichedTopics)
                 }
 
-                if (team) {
+                if (currentTeam) {
                     const { data: biasSelection } = await supabase
                         .from('topic_selections')
                         .select('topic_id, topics(name)')
                         .eq('round_id', roundId)
-                        .eq('team_id', team.id)
+                        .eq('team_id', currentTeam.id)
                         .single()
 
                     if (biasSelection) {

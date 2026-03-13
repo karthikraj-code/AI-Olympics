@@ -26,6 +26,7 @@ export default function GradeSubmissionPage() {
     const [teamTopics, setTeamTopics] = useState<any[]>([])
 
     const [score, setScore] = useState<number | ''>('')
+    const [criteriaScores, setCriteriaScores] = useState<Record<string, number>>({})
     const [feedback, setFeedback] = useState('')
 
     useEffect(() => {
@@ -57,6 +58,7 @@ export default function GradeSubmissionPage() {
             if (sc) {
                 setExistingScore(sc)
                 setScore(sc.score)
+                setCriteriaScores(sc.criteria_scores || {})
                 setFeedback(sc.feedback || '')
             }
 
@@ -91,6 +93,7 @@ export default function GradeSubmissionPage() {
                     team_id: teamId,
                     round_id: roundId,
                     score: Number(score),
+                    criteria_scores: criteriaScores,
                     feedback
                 })
             })
@@ -320,8 +323,43 @@ export default function GradeSubmissionPage() {
                         )}
 
                         <div className="space-y-5">
+                            {/* Detailed Rubric Inputs */}
+                            {typeof rubric === 'object' && Object.keys(rubric).length > 0 && (
+                                <div className="space-y-4 p-4 bg-blue-50/50 rounded-lg border border-blue-100">
+                                    <h4 className="font-bold text-blue-900 text-sm flex items-center gap-2 mb-2">
+                                        <CheckCircle2 size={16} /> Criteria Breakdown
+                                    </h4>
+                                    {Object.entries(rubric).map(([key, maxVal]) => (
+                                        <div key={key} className="space-y-1.5">
+                                            <div className="flex justify-between items-center pr-1">
+                                                <label className="text-sm font-medium text-gray-700">{key}</label>
+                                                <span className="text-xs font-bold text-gray-400">Max {String(maxVal)}</span>
+                                            </div>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max={Number(maxVal)}
+                                                value={criteriaScores[key] ?? ''}
+                                                onChange={(e) => {
+                                                    const newVal = e.target.value === '' ? 0 : Number(e.target.value)
+                                                    const updated = { ...criteriaScores, [key]: newVal }
+                                                    setCriteriaScores(updated)
+                                                    // Auto-calculate total score
+                                                    const total = Object.values(updated).reduce((a, b) => a + b, 0)
+                                                    setScore(total)
+                                                }}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white font-medium"
+                                                placeholder={`0 - ${maxVal}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             <div>
-                                <label className="block text-sm font-semibold text-gray-900 mb-2">Total Score Given</label>
+                                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                    {Object.keys(rubric).length > 0 ? 'Total Calculated Score' : 'Total Score Given'}
+                                </label>
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="number"
@@ -329,12 +367,18 @@ export default function GradeSubmissionPage() {
                                         max={maxScore > 0 ? maxScore : undefined}
                                         value={score}
                                         onChange={(e) => setScore(e.target.value === '' ? '' : Number(e.target.value))}
+                                        readOnly={Object.keys(rubric).length > 0}
                                         required
-                                        className="w-full text-lg px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent font-medium"
+                                        className={`w-full text-lg px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent font-bold ${Object.keys(rubric).length > 0 ? 'bg-gray-50 border-blue-200 text-blue-700' : ''}`}
                                         placeholder={`e.g. ${maxScore > 0 ? maxScore : 100}`}
                                     />
                                     {maxScore > 0 && <span className="text-gray-500 font-bold whitespace-nowrap text-lg">/ {maxScore} pts</span>}
                                 </div>
+                                {Object.keys(rubric).length > 0 && (
+                                    <p className="mt-1.5 text-xs text-blue-600 font-medium italic">
+                                        * Calculated automatically from criteria breakdown.
+                                    </p>
+                                )}
                             </div>
 
                             <div>

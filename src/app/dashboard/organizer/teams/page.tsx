@@ -199,6 +199,11 @@ export default function ManageTeamsPage() {
                                         ))}
                                     </div>
                                 )}
+                                <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end">
+                                    <a href="/dashboard/organizer/submissions" className="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-1">
+                                        View Team Submissions &rarr;
+                                    </a>
+                                </div>
                             </div>
                         </div>
 

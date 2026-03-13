@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/auth"
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LogOut, LayoutDashboard, Flag, UserCheck, Settings, Award } from 'lucide-react'
+import { LogOut, LayoutDashboard, Flag, UserCheck, Settings, Award, FileText } from 'lucide-react'
 import SignOutButton from '@/components/SignOutButton'
 
 export default async function OrganizerLayout({
@@ -42,6 +42,10 @@ export default async function OrganizerLayout({
                     <Link href="/dashboard/organizer" className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-gray-100 font-medium transition-colors">
                         <LayoutDashboard size={20} />
                         Dashboard
+                    </Link>
+                    <Link href="/dashboard/organizer/submissions" className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-gray-100 font-medium transition-colors">
+                        <FileText size={20} />
+                        View Submissions
                     </Link>
                     <Link href="/dashboard/organizer/rounds" className="flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 hover:bg-gray-100 font-medium transition-colors">
                         <Flag size={20} />
