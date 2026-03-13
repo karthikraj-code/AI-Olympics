@@ -104,43 +104,6 @@ export default function ManageTeamsPage() {
                 <p className="text-gray-600">Assign specific teams to judges for review. <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Note: Judges only evaluate manual submission rounds. Quiz rounds are auto-graded and hidden from judges.</span></p>
             </div>
 
-            {/* Bulk Assignment Panel */}
-            {judges.length > 0 && (
-                <div className="bg-white p-6 rounded-xl border border-blue-200 shadow-sm bg-gradient-to-r from-blue-50 to-white">
-                    <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-                        <UserPlus size={20} />
-                        Bulk Assignment
-                    </h3>
-                    <div className="flex flex-wrap items-end gap-4">
-                        <div className="flex-1 min-w-[240px]">
-                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Select Judge for Bulk Assignment</label>
-                            <select 
-                                id="bulk-judge-select"
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
-                                defaultValue=""
-                            >
-                                <option value="" disabled>-- Choose a judge --</option>
-                                {judges.map(j => (
-                                    <option key={j.id} value={j.id}>{j.name} ({j.email})</option>
-                                ))}
-                            </select>
-                        </div>
-                        <button
-                            onClick={() => {
-                                const select = document.getElementById('bulk-judge-select') as HTMLSelectElement
-                                if (select.value) handleBulkAssignment(select.value)
-                                else alert('Please select a judge first')
-                            }}
-                            disabled={!!processing}
-                            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md disabled:bg-gray-400 flex items-center gap-2"
-                        >
-                            {processing?.startsWith('bulk') ? 'Processing...' : <><UserPlus size={18} /> Assign All Teams</>}
-                        </button>
-                    </div>
-                    <p className="mt-3 text-xs text-blue-600 font-medium">* This will assign every registered team to the selected judge at once.</p>
-                </div>
-            )}
-
             {judges.length === 0 && (
                 <div className="bg-sky-50 text-sky-800 p-4 rounded-lg flex items-start gap-3 border border-sky-200">
                     <ShieldCheck className="mt-0.5 shrink-0" />
@@ -170,6 +133,49 @@ export default function ManageTeamsPage() {
                     </div>
                 </div>
             )}
+
+            {/* Bulk Assignment Panel */}
+            <div className={`bg-white p-6 rounded-xl border border-blue-200 shadow-sm bg-gradient-to-r from-blue-50 to-white ${judges.length === 0 ? 'opacity-60 grayscale' : ''}`}>
+                <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                    <UserPlus size={20} />
+                    Bulk Assignment
+                </h3>
+                {judges.length > 0 ? (
+                    <>
+                        <div className="flex flex-wrap items-end gap-4">
+                            <div className="flex-1 min-w-[240px]">
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Select Judge for Bulk Assignment</label>
+                                <select 
+                                    id="bulk-judge-select"
+                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>-- Choose a judge --</option>
+                                    {judges.map(j => (
+                                        <option key={j.id} value={j.id}>{j.name} ({j.email})</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    const select = document.getElementById('bulk-judge-select') as HTMLSelectElement
+                                    if (select.value) handleBulkAssignment(select.value)
+                                    else alert('Please select a judge first')
+                                }}
+                                disabled={!!processing}
+                                className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md disabled:bg-gray-400 flex items-center gap-2"
+                            >
+                                {processing?.startsWith('bulk') ? 'Processing...' : <><UserPlus size={18} /> Assign All Teams</>}
+                            </button>
+                        </div>
+                        <p className="mt-3 text-xs text-blue-600 font-medium">* This will assign every registered team to the selected judge at once.</p>
+                    </>
+                ) : (
+                    <p className="text-sm text-gray-500 italic">
+                        Bulk assignment will be available once at least one judge has logged into the platform.
+                    </p>
+                )}
+            </div>
 
             <div className="grid grid-cols-1 gap-6">
                 {teams.map(team => (
