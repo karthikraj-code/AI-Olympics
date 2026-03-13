@@ -17,6 +17,7 @@ export async function POST(request: Request) {
             file_url,
             link,
             github_url,
+            chatgpt_link_2,
             quiz_score // Used if it's a quiz auto-calculation from client
         } = await request.json()
 
@@ -77,6 +78,7 @@ export async function POST(request: Request) {
                     file_url,
                     link,
                     github_url,
+                    chatgpt_link_2,
                     submitted_at: new Date().toISOString()
                 })
                 .eq('id', existingSub.id)
@@ -93,7 +95,8 @@ export async function POST(request: Request) {
                     text_response,
                     file_url,
                     link,
-                    github_url
+                    github_url,
+                    chatgpt_link_2
                 }])
                 .select()
 

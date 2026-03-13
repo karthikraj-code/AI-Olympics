@@ -43,7 +43,8 @@ export default function RoundSubmissionPage() {
         text_response: '',
         file_url: '',
         link: '',
-        github_url: ''
+        github_url: '',
+        chatgpt_link_2: ''
     })
 
     useEffect(() => {
@@ -96,7 +97,8 @@ export default function RoundSubmissionPage() {
                         text_response: submission.text_response || '',
                         file_url: submission.file_url || '',
                         link: submission.link || '',
-                        github_url: submission.github_url || ''
+                        github_url: submission.github_url || '',
+                        chatgpt_link_2: submission.chatgpt_link_2 || ''
                     })
                 }
             }
@@ -530,13 +532,28 @@ export default function RoundSubmissionPage() {
                                     <div>
                                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
                                             <LinkIcon size={18} className="text-gray-500" />
-                                            ChatGPT shared chat link for evaluations
+                                            ChatGPT shared chat link for evaluations (Link 1)
                                         </label>
                                         <input
                                             type="url"
                                             value={formData.text_response || ''}
                                             required
                                             onChange={e => setFormData({ ...formData, text_response: e.target.value })}
+                                            disabled={isClosed}
+                                            placeholder="https://chatgpt.com/share/..."
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+                                            <LinkIcon size={18} className="text-gray-500" />
+                                            ChatGPT shared chat link for evaluations (Link 2)
+                                        </label>
+                                        <input
+                                            type="url"
+                                            value={formData.chatgpt_link_2 || ''}
+                                            required
+                                            onChange={e => setFormData({ ...formData, chatgpt_link_2: e.target.value })}
                                             disabled={isClosed}
                                             placeholder="https://chatgpt.com/share/..."
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all disabled:bg-gray-50 disabled:text-gray-500"

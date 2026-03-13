@@ -202,10 +202,22 @@ export default function GradeSubmissionPage() {
                                 <div className="border border-purple-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white">
                                     <div className="flex items-center gap-3 font-medium text-gray-700">
                                         <LinkIcon size={20} className="text-purple-600" />
-                                        ChatGPT Chat Link
+                                        ChatGPT Chat Link 1
                                     </div>
                                     <a href={submission.text_response} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline whitespace-nowrap">
-                                        Open Chat &rarr;
+                                        Open Chat 1 &rarr;
+                                    </a>
+                                </div>
+                            )}
+
+                            {submission.chatgpt_link_2 && round.submission_type?.includes('tlearn_topics') && (
+                                <div className="border border-purple-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-white">
+                                    <div className="flex items-center gap-3 font-medium text-gray-700">
+                                        <LinkIcon size={20} className="text-purple-600" />
+                                        ChatGPT Chat Link 2
+                                    </div>
+                                    <a href={submission.chatgpt_link_2} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline whitespace-nowrap">
+                                        Open Chat 2 &rarr;
                                     </a>
                                 </div>
                             )}

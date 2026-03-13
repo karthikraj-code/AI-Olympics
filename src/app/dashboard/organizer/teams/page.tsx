@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { UserPlus, UserMinus, ShieldCheck } from 'lucide-react'
+import { UserPlus, UserMinus, ShieldCheck, AlertCircle } from 'lucide-react'
 
 export default function ManageTeamsPage() {
     const supabase = createClient()
 
     const [teams, setTeams] = useState<any[]>([])
     const [judges, setJudges] = useState<any[]>([])
+    const [whitelistedEmails, setWhitelistedEmails] = useState<string[]>([])
     const [assignments, setAssignments] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [processing, setProcessing] = useState<string | null>(null) // Contains teamId-judgeId
@@ -21,7 +22,12 @@ export default function ManageTeamsPage() {
         try {
             // Fetch teams without chaining .team_members if it causes RLS issue, 
             // but for organizer we assume full select works or we fetch separately.
-            const [{ data: teamsData }, { data: judgesData }, { data: assignsData }] = await Promise.all([
+            const [
+                { data: teamsData }, 
+                { data: judgesData }, 
+                { data: assignsData },
+                { data: whitelistedData }
+            ] = await Promise.all([
                 supabase.from('teams').select(`
                     id, 
                     team_name, 
@@ -31,12 +37,14 @@ export default function ManageTeamsPage() {
                     )
                 `).order('created_at'),
                 supabase.from('users').select('id, name, email').eq('role', 'judge'),
-                supabase.from('judge_assignments').select('*')
+                supabase.from('judge_assignments').select('*'),
+                supabase.from('judge_emails').select('email')
             ])
 
             setTeams(teamsData || [])
             setJudges(judgesData || [])
             setAssignments(assignsData || [])
+            setWhitelistedEmails((whitelistedData || []).map(d => d.email.toLowerCase()))
         } catch (err) {
             console.error(err)
         } finally {
@@ -80,8 +88,28 @@ export default function ManageTeamsPage() {
                 <div className="bg-sky-50 text-sky-800 p-4 rounded-lg flex items-start gap-3 border border-sky-200">
                     <ShieldCheck className="mt-0.5 shrink-0" />
                     <div>
-                        <p className="font-bold">No Judges Found</p>
+                        <p className="font-bold">No Registered Judges Found</p>
                         <p className="text-sm">You need to have users registered as 'judge' to assign them. Please create judge accounts in your database or registration system.</p>
+                    </div>
+                </div>
+            )}
+
+            {whitelistedEmails.filter(email => !judges.some(j => j.email.toLowerCase() === email)).length > 0 && (
+                <div className="bg-amber-50 text-amber-800 p-4 rounded-lg flex items-start gap-3 border border-amber-200 shadow-sm">
+                    <AlertCircle className="mt-0.5 shrink-0 text-amber-600" />
+                    <div>
+                        <p className="font-bold">Pending Judges Detected</p>
+                        <p className="text-sm mb-2">The following emails are whitelisted as judges but haven't logged in yet. They will appear in the assignment list once they sign in for the first time:</p>
+                        <ul className="flex flex-wrap gap-2">
+                            {whitelistedEmails
+                                .filter(email => !judges.some(j => j.email.toLowerCase() === email))
+                                .map(email => (
+                                    <li key={email} className="bg-white px-2 py-0.5 rounded border border-amber-200 text-xs font-mono font-bold">
+                                        {email}
+                                    </li>
+                                ))
+                            }
+                        </ul>
                     </div>
                 </div>
             )}
