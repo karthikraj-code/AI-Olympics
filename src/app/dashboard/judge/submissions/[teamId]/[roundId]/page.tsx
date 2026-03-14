@@ -225,6 +225,18 @@ export default function GradeSubmissionPage() {
                                 </div>
                             )}
 
+                            {submission.chatgpt_link_2 && round.submission_type?.includes('data_preprocessing') && (
+                                <div className="border border-green-200 rounded-lg overflow-hidden flex items-center justify-between p-4 bg-green-50 mt-4">
+                                    <div className="flex items-center gap-3 font-medium text-green-800">
+                                        <LinkIcon size={20} className="text-green-600" />
+                                        Excel Sheet Link
+                                    </div>
+                                    <a href={submission.chatgpt_link_2.startsWith('http') ? submission.chatgpt_link_2 : `https://${submission.chatgpt_link_2}`} target="_blank" rel="noopener noreferrer" className="bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors">
+                                        Open Excel Sheet &rarr;
+                                    </a>
+                                </div>
+                            )}
+
                             {submission.file_url && (
                                 <div className="border border-gray-200 rounded-lg overflow-hidden flex flex-col p-4 bg-white gap-3">
                                     <div className="flex items-center justify-between">

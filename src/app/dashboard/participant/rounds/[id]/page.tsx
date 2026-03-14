@@ -905,7 +905,7 @@ export default function RoundSubmissionPage() {
                                         <ul className="list-disc pl-5 space-y-1">
                                             <li>Download the noisy CSV file from the link below.</li>
                                             <li>Use AI and write code to clean the data.</li>
-                                            <li>Submit your Google Colab link and the ChatGPT shared chat link used for the process.</li>
+                                            <li>Submit your Google Colab link and the Excel sheet link used for the process.</li>
                                             <li>Only the Team Leader can submit the final links.</li>
                                         </ul>
                                     </div>
@@ -946,7 +946,7 @@ export default function RoundSubmissionPage() {
                                         <div>
                                             <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
                                                 <LinkIcon size={18} className="text-gray-500" />
-                                                ChatGPT Shared Chat Link
+                                                Excel Sheet Link
                                             </label>
                                             <input
                                                 type="url"
@@ -954,7 +954,7 @@ export default function RoundSubmissionPage() {
                                                 required
                                                 onChange={e => setFormData({ ...formData, chatgpt_link_2: e.target.value })}
                                                 disabled={isClosed}
-                                                placeholder="https://chatgpt.com/share/..."
+                                                placeholder="https://docs.google.com/spreadsheets/..."
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all disabled:bg-gray-50"
                                             />
                                         </div>

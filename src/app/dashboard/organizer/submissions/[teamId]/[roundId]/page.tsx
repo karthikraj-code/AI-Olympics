@@ -1,6 +1,6 @@
 import { createAdminClient } from '@/utils/supabase/server'
 import Link from 'next/link'
-import { ArrowLeft, FileText, Download, AlertCircle, CheckCircle2, ExternalLink, Image as ImageIcon, Trophy, User, Clock, MessageSquare } from 'lucide-react'
+import { ArrowLeft, FileText, Download, AlertCircle, CheckCircle2, ExternalLink, Image as ImageIcon, Trophy, User, Clock, MessageSquare, LinkIcon } from 'lucide-react'
 
 export default async function OrganizerSubmissionDetail({
     params,
@@ -191,6 +191,29 @@ export default async function OrganizerSubmissionDetail({
                                             </div>
                                         </a>
                                     )}
+                                </div>
+                            )}
+
+                            {/* Data Preprocessing Specific Links */}
+                            {round.submission_type?.includes('data_preprocessing') && submission.chatgpt_link_2 && (
+                                <div className="p-6 bg-green-50 border-2 border-green-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 group mt-4">
+                                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                                        <div className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-green-500 group-hover:text-green-600 group-hover:scale-110 transition-all flex-shrink-0">
+                                            <LinkIcon size={24} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-1">Excel Sheet Link</p>
+                                            <p className="font-bold text-green-800 font-mono truncate max-w-[200px] sm:max-w-xs">{submission.chatgpt_link_2}</p>
+                                        </div>
+                                    </div>
+                                    <a 
+                                        href={submission.chatgpt_link_2.startsWith('http') ? submission.chatgpt_link_2 : `https://${submission.chatgpt_link_2}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-xl font-black text-sm hover:bg-green-700 transition-all text-center"
+                                    >
+                                        View Excel Sheet
+                                    </a>
                                 </div>
                             )}
 
